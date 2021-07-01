@@ -1,0 +1,54 @@
+数字图像处理实践专题大作业——交通标志识别
+史文博
+2020214321
+
+研究现状
+研究方案
+特色与创新
+实验结果
+
+交通标志分类的方法比较多，目前主流的方法主要有三类：基于模板匹配、机器学习和深度学习的方法。
+基于模板匹配：将预先已知的小模板在大图像中平移来搜索子图像，通过一定的算法在大图像中找到与模板最匹配（相似）的目标，确定其坐标位置；
+基于机器学习：目前的算法主要是采用“人工提取特征+机器学习”，即提取一些能够表示或描述交通标志信息的特征，再结合机器学习算法进行识别。常用的人工提取特征有尺度不变特征变换、ORB特征、Gabor 小波特征和方向梯度直方图特征。常用的机器学习分类器有支持向量机、BP神经网络、极限学习机和最近邻算法；
+基于深度学习：深度卷积神经网络不需要设计手工特征，输入模型的图像通过监督学习来完成特征提取和分类，识别率高于AdaBoost和SVM等传统算法。Sermanet等人[1]提出多尺度CNN应用于交通标志识别任务，达到 99.17% 的准确率。Ciresan 等人[2]使用多列深度卷积神经网络在 GTSRB 数据集上获得 99.46% 的准确率。
+
+基于深度学习：
+         尽管前两个网络的准确度很高，但它们的计算效率不高。Aghdam等人[3]为减少计算量，选用线性整流函数激活函数，然后将两个中间卷积池化层划分成两组，使得中间层的参数数量减半，算法的识别率提高到99.51%。Jin等人[4]提出了一种铰链损失随机梯度下降方法训练CNN，该方法比之前网络模型所使用的随机梯度下降方法训练得更快，收敛更稳定，在GTSRB上的识别率为99.65%。文献[4]的准确率已经比较高，但训练时间还是比较长。为此，Natarajan 等人[5]提出一种低复杂度的加权组合的 4 个并行的 CNN 网 络来识别交通标志，在 GTSRB 数据集上的准确率为99.59%。Li等人[6]使用具有不对称内核的高效且强大的CNN作为分类器，用1 × n卷积和n × 1卷积替换n × n卷积，减少了内核参数，并且降低了卷积的运算量，分类效果好，在GTSRB数据集上准确率为99.66%。
+         基于深度学习的交通标志识别方法通过训练大数据来学习特征，比采用人工设计特征的传统方法更有优势，准确率明显提升。该算法有助于解决光照变化、部分遮挡等情况下的交通标志识别难点问题。
+
+1. 模型选择
+         深度学习网络的深度对模型的性能至关重要，当增加网络层数后，网络可以进行更加复杂的特征模式的提取，所以当模型更深时理论上可以取得更好的结果，但事实上更深的网络其性能不一定会更好，这是因为深层网络存在着梯度消失或者爆炸的问题，使得深度学习模型很难训练。为了解决网络较深时难以训练的问题，He[7]提出了残差学习来解决退化问题。考虑到交通标志识别任务的复杂度和网络模型的大小，选择了层数较少的Resnet18。
+残差块
+Resnet18结构参数
+
+2. 注意力机制
+         注意力机制源于对人类视觉的研究。在认知科学中，由于信息处理的瓶颈，人类会选择性地关注所有信息的一部分，同时忽略其他可见的信息，这被称为注意力机制。在计算机视觉领域，注意力机制被引入来进行视觉信息处理。注意力机制包括通道注意力和空间注意力等，空间区域注意力可以理解为让神经网络在看哪里，通道注意力可以理解为让神经网络在看什么。Sanghyun Woo[8]提出了包括空间注意力与通道注意力的模块CBAM。
+通道注意力机制
+空间注意力机制
+
+因此采用引入注意力机制的Resnet18作为网络结构进行交通标志识别。
+CBAM模块
+融合通道注意力机制的残差块
+
+在交通标志识别任务中引入深度残差网络
+在交通标志识别任务中引入注意力机制，包括空间注意力与通道注意力
+
+分别使用未使用注意力机制与使用注意力机制两种模型进行训练和测试，得到如下结果：
+从实验结果可以看出，使用注意力机制有助于提高模型的性能。
+
+作出训练过程中两种模型的测试损失和测试准确率变化曲线：
+可以看出，使用注意力机制有助于降低损失，提高准确率。
+
+[1] Sermanet P,  Lecun Y.Traffic sign recognition with multiscale convolutional networks[C]//International Joint Conference on Neural Networks,  2011：2809-2813.
+[2] Ciresan D,  Meier U,  Masci J,  et al.Multi-column deep neural network for traffic sign classification[J].Neural Networks,  2012,  32：333-338.
+[3] Aghdam H H,  Heravi E J,  Puig D.Toward an optimal convolutional neural network for traffic sign recognition[C]//8th International Conference on Machine Vision,  2015.
+[4] Jin Junqi,  Fu Kun,  Zhang Changshui.Traffic sign recognition with hinge loss trained convolutional neural networks[J].IEEE Transactions on Intelligent Transportation Systems,  2014,  15（5）：1991-2000.
+[5] Natarajan S,  Annamraju A K,  Baradkar C S.Traffic sign recognition using weighted multi-convolutional neural network[J].IET Intelligent Transport Systems,  2018,  12（10）：1396-1405.
+[6] Li Jia,  Wang Zengfu.Real-time traffic sign recognition based on efficient CNNs in the     wild[J].IEEE Transactions on Intelligent Transportation Systems,  2019,  20（3）：975-984.
+[7] K. He, X. Zhang, S. Ren and J. Sun, "Deep Residual Learning for Image Recognition," 2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016, pp. 770-778, doi: 10.1109/CVPR.2016.90.
+[8] Woo S , Park J ,  Lee J Y , et al. CBAM: Convolutional Block Attention Module[J]. European Conference on Computer Vision, 2018.
+
+
+
+
+
